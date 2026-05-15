@@ -1,2 +1,3 @@
 /.idea
-.env
+auth.env
+.DS_Store

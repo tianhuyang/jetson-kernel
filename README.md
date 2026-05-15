@@ -24,6 +24,8 @@ cp auth.env.example auth.env
 # edit auth.env with real host/user/pass
 ```
 
+If Jetson needs a proxy for outbound downloads, set `JETSON_HTTPS_PROXY` in `auth.env`.
+
 ## 2) Optional host dependency for non-interactive SSH
 
 If your host has `sshpass`, the launcher will run non-interactively. Without it, SSH/SCP may prompt for password.
@@ -69,5 +71,9 @@ sudo /var/backups/jetson-tc-modules-<timestamp>/quick_rollback.sh
 ## Notes
 
 - Source tree detection is automatic; if missing, script exits with expected paths.
+- If no local source tree is found, the script retrieves source via `./source_sync.sh -k -t <tag>` on Jetson.
+- `source_sync.sh` is copied from `scripts/source_sync.sh` to `/tmp/source_sync.sh` during remote launch.
+- You can override the detected tag with `JETSON_L4T_TAG` in `auth.env`.
 - Build is done in-place on the Jetson and uses `/proc/config.gz` when available.
+- On successful module install, the script runs an automatic `tc` smoke test on a temporary dummy interface.
 - Unsigned first pass: no secure boot signing steps are included.

@@ -40,7 +40,7 @@ pick_kernel_src() {
   )
   local d
   for d in "${candidates[@]}"; do
-    if [[ -f "${d}/Makefile" && -f "${d}/net/sched/sch_htb.c" && -f "${d}/net/sched/sch_tbf.c" && -f "${d}/net/sched/cls_u32.c" && -f "${d}/net/sched/cls_matchall.c" && -f "${d}/net/sched/act_police.c" ]]; then
+    if [[ -f "${d}/Makefile" && -f "${d}/net/sched/sch_htb.c" && -f "${d}/net/sched/sch_tbf.c" && -f "${d}/net/sched/sch_cake.c" && -f "${d}/net/sched/cls_u32.c" && -f "${d}/net/sched/cls_matchall.c" && -f "${d}/net/sched/act_police.c" ]]; then
       echo "$d"
       return 0
     fi
@@ -158,7 +158,7 @@ fetch_kernel_src_with_source_sync() {
 
   local src_dir="$workdir/kernel/kernel-jammy-src"
 
-  if [[ -z "$src_dir" || ! -f "$src_dir/Makefile" || ! -f "$src_dir/net/sched/sch_htb.c" || ! -f "$src_dir/net/sched/sch_tbf.c" || ! -f "$src_dir/net/sched/cls_u32.c" || ! -f "$src_dir/net/sched/cls_matchall.c" || ! -f "$src_dir/net/sched/act_police.c" ]]; then
+  if [[ -z "$src_dir" || ! -f "$src_dir/Makefile" || ! -f "$src_dir/net/sched/sch_htb.c" || ! -f "$src_dir/net/sched/sch_tbf.c" || ! -f "$src_dir/net/sched/sch_cake.c" || ! -f "$src_dir/net/sched/cls_u32.c" || ! -f "$src_dir/net/sched/cls_matchall.c" || ! -f "$src_dir/net/sched/act_police.c" ]]; then
     echo "ERROR: source_sync did not create a usable kernel tree at ${src_dir}." >&2
     return 1
   fi
@@ -211,6 +211,7 @@ enable_tc_symbols() {
   fi
   "${ksrc}/scripts/config" --file "${ksrc}/.config" --module NET_SCH_HTB
   "${ksrc}/scripts/config" --file "${ksrc}/.config" --module NET_SCH_TBF
+  "${ksrc}/scripts/config" --file "${ksrc}/.config" --module NET_SCH_CAKE
   "${ksrc}/scripts/config" --file "${ksrc}/.config" --module NET_ACT_POLICE
   "${ksrc}/scripts/config" --file "${ksrc}/.config" --module NET_CLS_U32
   "${ksrc}/scripts/config" --file "${ksrc}/.config" --module NET_CLS_MATCHALL
@@ -239,7 +240,7 @@ EOF2
   sudo_run chmod +x "$backup_root/quick_rollback.sh"
 }
 verify_modules() {
-  local mods=(sch_htb sch_tbf act_police cls_u32 cls_matchall)
+  local mods=(sch_htb sch_tbf sch_cake act_police cls_u32 cls_matchall)
   local m
   for m in "${mods[@]}"; do
     if ! modinfo "$m" >/dev/null 2>&1; then
@@ -252,7 +253,7 @@ verify_modules() {
 }
 
 report_target_modules() {
-  local mods=(sch_htb sch_tbf act_police cls_u32 cls_matchall)
+  local mods=(sch_htb sch_tbf sch_cake act_police cls_u32 cls_matchall)
   local m
   echo "Installed module details:"
   for m in "${mods[@]}"; do

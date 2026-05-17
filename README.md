@@ -4,6 +4,7 @@ This workspace provides scripts to enable and deploy these kernel options as mod
 
 - `CONFIG_NET_SCH_HTB=m`
 - `CONFIG_NET_SCH_TBF=m`
+- `CONFIG_NET_SCH_CAKE=m`
 - `CONFIG_NET_ACT_POLICE=m`
 - `CONFIG_NET_CLS_U32=m`
 - `CONFIG_NET_CLS_MATCHALL=m`
